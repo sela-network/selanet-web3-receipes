@@ -54,8 +54,6 @@ python example_bridge.py token_prices
 python example_bridge.py categories_market_cap chains_ranking
 ```
 
-Available recipes: `token_prices`, `categories_market_cap`, `chains_ranking`, `charts_global`, `crypto_gainers_losers`, `exchanges_cex`, `exchanges_derivatives`, `exchanges_dex`, `highlights_trending`, `new_cryptocurrencies`, `nft_floor_price`, `treasuries_holdings`
-
 ## Project Structure
 
 ```
