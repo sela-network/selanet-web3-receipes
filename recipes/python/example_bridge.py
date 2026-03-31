@@ -201,6 +201,20 @@ def show_eth_block_detail(sela: Selanet):
     print(f"  Reward: {b['block_reward']}  Burnt: {b['burnt_fees']}")
 
 
+def show_l2_scaling_summary(sela: Selanet):
+    print("\n=== L2Beat: Scaling Summary ===")
+    l2s = sela.run("l2beat/scaling_summary")
+    for l in l2s[:10]:
+        print(f"  #{l['rank']} {l['name']}: {l['stage']}  TVS {l['total_value_secured']}  proof: {l['proof_system']}")
+
+
+def show_l2_scaling_risk(sela: Selanet):
+    print("\n=== L2Beat: Scaling Risk ===")
+    risks = sela.run("l2beat/scaling_risk")
+    for r in risks[:10]:
+        print(f"  #{r['rank']} {r['name']}: DA {r['data_availability']}  exit {r['exit_window']}  seq {r['sequencer_failure']}")
+
+
 RECIPES = {
     # CoinGecko
     "token_prices": show_token_prices,
@@ -230,6 +244,9 @@ RECIPES = {
     "eth_transactions": show_eth_transactions,
     "eth_tx_detail": show_eth_tx_detail,
     "eth_block_detail": show_eth_block_detail,
+    # L2Beat
+    "l2_scaling_summary": show_l2_scaling_summary,
+    "l2_scaling_risk": show_l2_scaling_risk,
 }
 
 if __name__ == "__main__":

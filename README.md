@@ -41,6 +41,12 @@ A collection of example code for scraping data from major Web3 sites using the S
 | `rankings_soaring.ts` | Trending/soaring project rankings |
 | `token_unlocks.ts` | Upcoming token unlock schedules |
 
+### L2Beat
+| Recipe | Description |
+|--------|-------------|
+| `scaling_summary.ts` | L2 scaling solutions with TVL and activity data |
+| `scaling_risk.ts` | L2 risk assessments (state validation, DA, exit window) |
+
 ## Quick Start
 
 ### TypeScript
@@ -61,7 +67,7 @@ npx tsx coingecko/token_prices.ts
 
 ### Python
 
-The Python SDK uses the Node bridge to run all CoinGecko recipes:
+The Python SDK uses the Node bridge to run all recipes:
 
 ```bash
 cd recipes/python
@@ -87,6 +93,7 @@ selanet-web3-recipes/
         ├── coingecko/     # CoinGecko recipes
         ├── etherscan/     # Etherscan recipes
         ├── rootdata/      # RootData recipes
+        ├── l2beat/        # L2Beat recipes
         └── utils.ts       # Shared Selanet API helpers
 ```
 

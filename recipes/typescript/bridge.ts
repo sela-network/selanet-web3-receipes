@@ -44,6 +44,9 @@ import { parseMarkdownTable as parseEthTransactions } from "./etherscan/transact
 import { parseTxDetail as parseEthTxDetail } from "./etherscan/tx_detail.js";
 import { parseBlockDetail as parseEthBlockDetail } from "./etherscan/block_detail.js";
 
+import { parseMarkdownTable as parseL2ScalingSummary } from "./l2beat/scaling_summary.js";
+import { parseMarkdownTable as parseL2ScalingRisk } from "./l2beat/scaling_risk.js";
+
 interface Recipe {
   url: string | ((params?: Record<string, string>) => string);
   parse: (markdown: string) => unknown;
@@ -149,6 +152,14 @@ const recipes: Record<string, Recipe> = {
   "etherscan/block_detail": {
     url: (params) => `https://etherscan.io/block/${params?.block ?? ""}`,
     parse: parseEthBlockDetail,
+  },
+  "l2beat/scaling_summary": {
+    url: "https://l2beat.com/scaling/summary",
+    parse: parseL2ScalingSummary,
+  },
+  "l2beat/scaling_risk": {
+    url: "https://l2beat.com/scaling/risk",
+    parse: parseL2ScalingRisk,
   },
 };
 
