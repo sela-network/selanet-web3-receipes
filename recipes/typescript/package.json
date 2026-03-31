@@ -1,0 +1,14 @@
+{
+  "name": "selanet-web3-recipes-ts",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {},
+  "dependencies": {
+    "dotenv": "^16.6.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.37",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  }
+}
