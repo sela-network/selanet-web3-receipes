@@ -22,6 +22,8 @@ A collection of example code for scraping data from major Web3 sites using the S
 
 ## Quick Start
 
+### TypeScript
+
 ```bash
 # 1. Set up API Key
 cp .env.example .env
@@ -34,6 +36,34 @@ npm install
 # 3. Run a recipe
 export SELA_API_KEY=sk_live_your_key
 npx tsx coingecko/token_prices.ts
+```
+
+### Python
+
+```bash
+export SELA_API_KEY=sk_live_your_key
+```
+
+```python
+import os, requests
+
+SELA_API_KEY = os.environ["SELA_API_KEY"]
+
+def browse(url: str, extract_format: str = "markdown") -> dict:
+    resp = requests.post(
+        "https://api.selanet.ai/v1/browse",
+        headers={
+            "Authorization": f"Bearer {SELA_API_KEY}",
+            "Content-Type": "application/json",
+        },
+        json={"url": url, "extract_format": extract_format},
+    )
+    resp.raise_for_status()
+    return resp.json()
+
+# Example: Fetch CoinGecko token prices
+data = browse("https://www.coingecko.com")
+print(data.get("extracted_content", ""))
 ```
 
 ## Project Structure
