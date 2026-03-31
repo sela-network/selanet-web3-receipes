@@ -33,7 +33,7 @@ function parseProtocols(markdown: string): DefiTvl[] {
 
   // Find protocol rows: lines containing defillama.com/protocol/
   const protocolPattern =
-    /!\[Logo of ([^\]]*)\]\(([^)]+)\)\[([^\]]+)\]\((https:\/\/defillama\.com\/protocol\/([^)]+))\)(\d+\s+chains?)?/;
+    /!\[Logo of ([^\]]*)\]\(([^)]+)\)\[([^\]]+)\]\((https:\/\/defillama\.com\/protocol\/([^)]+))\)(.*)/;
 
   for (let i = 0; i < lines.length; i++) {
     const match = lines[i].match(protocolPattern);
@@ -43,7 +43,9 @@ function parseProtocols(markdown: string): DefiTvl[] {
     const image = match[2];
     const url = match[4];
     const slug = match[5];
-    const chains = match[6]?.trim() || "";
+    const chainsRaw = match[6]?.trim() || "";
+    const chainsMatch = chainsRaw.match(/(\d+\s+chains?)/);
+    const chains = chainsMatch ? chainsMatch[1] : chainsRaw;
 
     // Next lines are: optional category, then values
     let j = i + 1;
@@ -113,7 +115,12 @@ async function main() {
   const data = await browse("https://defillama.com");
   const markdown = data?.extracted_content ?? "";
   const protocols = parseProtocols(markdown);
-  console.log(JSON.stringify(protocols, null, 2));
+  if (protocols.length === 0) {
+    console.error("No protocols found. Markdown length:", markdown.length);
+    console.error("First 1000 chars:", markdown.substring(0, 1000));
+  } else {
+    console.log(JSON.stringify(protocols, null, 2));
+  }
 }
 
 main();

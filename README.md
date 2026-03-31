@@ -1,70 +1,106 @@
 # Selanet Web3 Recipes
 
-A collection of recipes (example code) + dashboard UI for scraping data from major Web3 sites using the Selanet API.
+A collection of example code for scraping data from major Web3 sites using the Selanet Browse API.
 
-## Recipes
+## Supported Platforms
 
-| # | Recipe | Target | Description |
-|---|--------|--------|-------------|
-| 1 | Token Prices | CoinGecko | Top tokens by market cap, price changes |
-| 2 | DeFi TVL | DeFiLlama | Protocol TVL rankings |
-| 3 | NFT Collections | OpenSea | NFT collection floor price, volume |
-| 4 | Gas Tracker | Etherscan | Ethereum gas fees |
-| 5 | Whale Watch | Etherscan | Large whale wallet transactions |
-| 6 | DEX Volumes | DeFiLlama | 24h trading volume by DEX |
-| 7 | Token Unlocks | Token Unlocks | Token unlock schedule |
-| 8 | Airdrop Tracker | Airdrops.io | Active airdrop listings |
+### CoinGecko
+| Recipe | Description |
+|--------|-------------|
+| `token_prices.ts` | Top tokens by market cap, price changes |
+| `categories_market_cap.ts` | Category-level market caps (DeFi, Layer 1, Meme, etc.) |
+| `chains_ranking.ts` | Blockchain network rankings by market cap and TVL |
+| `charts_global.ts` | Global crypto market charts |
+| `crypto_gainers_losers.ts` | Biggest gainers and losers |
+| `exchanges_cex.ts` | Centralized exchange trust scores and volume |
+| `exchanges_dex.ts` | Decentralized exchange rankings |
+| `exchanges_derivatives.ts` | Derivatives exchange rankings |
+| `highlights_trending.ts` | Trending tokens, most searched coins |
+| `new_cryptocurrencies.ts` | Recently added cryptocurrencies |
+| `nft_floor_price.ts` | NFT collection floor prices |
+| `treasuries_holdings.ts` | Treasury holdings data |
+
+### DeFiLlama
+| Recipe | Description |
+|--------|-------------|
+| `defi_tvl.ts` | Protocol TVL rankings |
+| `chains.ts` | Chain TVL rankings |
+| `categories.ts` | Protocol categories by TVL |
+| `oracles.ts` | Oracle provider rankings |
+| `top_protocols.ts` | Top DeFi protocols |
+| `bridged_tvl.ts` | Bridged TVL by chain |
+| `forks.ts` | Forked protocol rankings |
+| `yields_overview.ts` | Yield farming opportunities |
+| `yields_stablecoins.ts` | Stablecoin pool yields |
+| `yields_leveraged_lending.ts` | Leveraged lending strategies |
+| `yields_delta_neutral.ts` | Delta neutral strategies |
+| `yields_long_short.ts` | Long/short strategies |
+| `fees.ts` | Protocol fee rankings |
+| `fees_chains.ts` | Chain fee rankings |
+| `revenue.ts` | Protocol revenue rankings |
+| `revenue_chains.ts` | Chain revenue rankings |
+| `holders_revenue.ts` | Token holder revenue |
+| `earnings.ts` | Protocol earnings |
+| `dexs_volumes.ts` | DEX trading volumes |
+| `dexs_chains.ts` | DEX volumes by chain |
+| `perps.ts` | Perpetual futures DEX volumes |
+| `perps_chains.ts` | Perps volumes by chain |
+| `open_interest.ts` | Open interest rankings |
+| `dex_aggregators.ts` | DEX aggregator volumes |
+| `perps_aggregators.ts` | Perps aggregator volumes |
+| `bridge_aggregators.ts` | Bridge aggregator volumes |
+| `options_premium.ts` | Options premium volume |
+| `options_notional.ts` | Options notional volume |
+| `stablecoins.ts` | Stablecoin market cap rankings |
+| `stablecoins_chains.ts` | Stablecoins by chain |
+| `bridges.ts` | Bridge volume rankings |
+| `bridges_chains.ts` | Bridge volumes by chain |
+| `hacks.ts` | DeFi hack/exploit history |
+| `airdrops.ts` | Airdrop listings |
+| `nfts_collections.ts` | NFT collection rankings |
+| `nfts_marketplaces.ts` | NFT marketplace rankings |
+| `etfs.ts` | Crypto ETF inflows/outflows |
+| `equities.ts` | Crypto-related equities |
+| `digital_asset_treasuries.ts` | Corporate crypto holdings |
+| `unlocks.ts` | Token unlock schedules |
+| `treasuries.ts` | Protocol treasury holdings |
+| `raises.ts` | Fundraising rounds |
+| `raises_investors.ts` | Investor rankings |
+| `cex_transparency.ts` | CEX proof-of-reserves |
+| `recently_listed.ts` | Recently listed protocols |
+| `narrative_tracker.ts` | Crypto narrative tracking |
+| `eth_liquid_staking.ts` | ETH liquid staking providers |
+| `governance.ts` | Governance proposals |
+| `rwa.ts` | Real world assets |
+| `token_liquidity.ts` | Token liquidity depth |
+| `borrow.ts` | Borrow rates |
 
 ## Quick Start
 
-### 1. Set up API Key
-
 ```bash
+# 1. Set up API Key
 cp .env.example .env
 # Enter your SELA_API_KEY in the .env file
-```
 
-### 2. Run Python Recipes
-
-```bash
-cd recipes/python
-pip install -r requirements.txt
-export SELA_API_KEY=sk_live_your_key
-python 01_token_prices.py
-```
-
-### 3. Run TypeScript Recipes
-
-```bash
+# 2. Install dependencies
 cd recipes/typescript
 npm install
+
+# 3. Run a recipe
 export SELA_API_KEY=sk_live_your_key
 npx tsx coingecko/token_prices.ts
-```
-
-### 4. Run Dashboard UI
-
-```bash
-cd web
-npm install
-# Add SELA_API_KEY=sk_live_your_key to .env.local
-npm run dev
-# Open http://localhost:3000
+npx tsx defillama/fees.ts
 ```
 
 ## Project Structure
 
 ```
 selanet-web3-recipes/
-├── recipes/
-│   ├── python/          # Python example code
-│   └── typescript/      # TypeScript example code
-├── web/                 # Next.js dashboard UI
-│   ├── app/             # Pages + API Routes
-│   ├── components/      # React components
-│   └── lib/             # Recipe data, code snippets
-└── docs/
-    └── PRD.md           # Product Requirements Document
+└── recipes/
+    └── typescript/
+        ├── coingecko/     # CoinGecko recipes
+        ├── defillama/     # DeFiLlama recipes
+        └── utils.ts       # Shared Selanet API helpers
 ```
 
 ## Selanet API
@@ -77,10 +113,3 @@ curl -X POST https://api.selanet.ai/v1/browse \
 ```
 
 - **Docs**: https://www.selanet.ai/resources/docs
-- **SDK**: `pip install selanet-sdk`
-
-## Tech Stack
-
-- **Recipes**: Python (httpx), TypeScript (fetch)
-- **UI**: Next.js 14, React, Tailwind CSS
-- **API**: Selanet Browse API (`/v1/browse`)
