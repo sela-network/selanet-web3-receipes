@@ -302,6 +302,25 @@ def show_world_token_detail(sela: Selanet):
     print(f"  Name: {t['name']}  Supply: {t['max_total_supply']}  Holders: {t['holders']}")
 
 
+def show_x_profile_tweets(sela: Selanet):
+    print("\n=== X: Profile Tweets ===")
+    tweets = sela.run("x/profile_tweets", params={"username": "VitalikButerin", "count": "5"})
+    for t in tweets[:5]:
+        print(f"  @{t['author_username']}  {t['text'][:80]}...")
+        print(f"    ❤️ {t['like_count']}  🔁 {t['retweet_count']}  💬 {t['reply_count']}")
+
+
+def show_x_search_tweets(sela: Selanet):
+    print("\n=== X: Search Tweets ===")
+    tweets = sela.run("x/search_tweets", params={"query": "ethereum", "count": "5"})
+    if not tweets:
+        print("  (Login required for search, or no results)")
+        return
+    for t in tweets[:5]:
+        print(f"  @{t['author_username']}  {t['text'][:80]}...")
+        print(f"    ❤️ {t['like_count']}  🔁 {t['retweet_count']}  💬 {t['reply_count']}")
+
+
 def show_l2_scaling_summary(sela: Selanet):
     print("\n=== L2Beat: Scaling Summary ===")
     l2s = sela.run("l2beat/scaling_summary")
@@ -362,6 +381,9 @@ RECIPES = {
     "world_block_detail": show_world_block_detail,
     "world_tx_detail": show_world_tx_detail,
     "world_token_detail": show_world_token_detail,
+    # X (Twitter)
+    "x_profile_tweets": show_x_profile_tweets,
+    "x_search_tweets": show_x_search_tweets,
     # L2Beat
     "l2_scaling_summary": show_l2_scaling_summary,
     "l2_scaling_risk": show_l2_scaling_risk,

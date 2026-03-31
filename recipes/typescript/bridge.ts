@@ -62,12 +62,17 @@ import { parseBlockDetail as parseWorldBlockDetail } from "./worldscan/block_det
 import { parseTxDetail as parseWorldTxDetail } from "./worldscan/tx_detail.js";
 import { parseTokenDetail as parseWorldTokenDetail } from "./worldscan/token_detail.js";
 
+import { parseTweets as parseXTweets } from "./x/profile_tweets.js";
+import { browseX } from "./x/utils.js";
+
 import { parseMarkdownTable as parseL2ScalingSummary } from "./l2beat/scaling_summary.js";
 import { parseMarkdownTable as parseL2ScalingRisk } from "./l2beat/scaling_risk.js";
 
 interface Recipe {
   url: string | ((params?: Record<string, string>) => string);
-  parse: (markdown: string) => unknown;
+  parse: (data: any) => unknown;
+  /** Use browseX (parse_only mode) instead of browse (markdown mode) */
+  xMode?: boolean;
 }
 
 const recipes: Record<string, Recipe> = {
@@ -239,6 +244,16 @@ const recipes: Record<string, Recipe> = {
     url: "https://l2beat.com/scaling/risk",
     parse: parseL2ScalingRisk,
   },
+  "x/profile_tweets": {
+    url: (params) => `https://x.com/${params?.username ?? "VitalikButerin"}`,
+    parse: parseXTweets,
+    xMode: true,
+  },
+  "x/search_tweets": {
+    url: (params) => `https://x.com/search?q=${encodeURIComponent(params?.query ?? "ethereum")}&src=typed_query&f=live`,
+    parse: parseXTweets,
+    xMode: true,
+  },
 };
 
 // -- IPC loop --
@@ -270,9 +285,16 @@ rl.on("line", async (line) => {
   try {
     const recipe = recipes[id];
     const url = typeof recipe.url === "function" ? recipe.url(req.params) : recipe.url;
-    const data = await browse(url);
-    const markdown = data?.extracted_content ?? "";
-    const result = recipe.parse(markdown);
+    let result: unknown;
+    if (recipe.xMode) {
+      const count = parseInt(req.params?.count ?? "10", 10);
+      const data = await browseX(url, count);
+      result = recipe.parse(data);
+    } else {
+      const data = await browse(url);
+      const markdown = data?.extracted_content ?? "";
+      result = recipe.parse(markdown);
+    }
     respond({ ok: true, result });
   } catch (err: any) {
     respond({ ok: false, error: err.message ?? String(err) });

@@ -64,6 +64,12 @@ A collection of example code for scraping data from major Web3 sites using the S
 | `rankings_soaring.ts` | Trending/soaring project rankings |
 | `token_unlocks.ts` | Upcoming token unlock schedules |
 
+### X (Twitter)
+| Recipe | Description |
+|--------|-------------|
+| `profile_tweets.ts` | Recent tweets from a user profile |
+| `search_tweets.ts` | Search tweets by query (requires login session) |
+
 ### L2Beat
 | Recipe | Description |
 |--------|-------------|
@@ -118,6 +124,7 @@ selanet-web3-recipes/
         ├── rootdata/      # RootData recipes
         ├── arcscan/       # Arc Testnet recipes
         ├── worldscan/     # World Chain recipes
+        ├── x/             # X (Twitter) recipes
         ├── l2beat/        # L2Beat recipes
         └── utils.ts       # Shared Selanet API helpers
 ```
