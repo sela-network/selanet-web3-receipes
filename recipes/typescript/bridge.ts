@@ -69,10 +69,45 @@ import { browseX } from "./x/utils.js";
 
 import { parseMarkdownTable as parseL2ScalingSummary } from "./l2beat/scaling_summary.js";
 import { parseMarkdownTable as parseL2ScalingRisk } from "./l2beat/scaling_risk.js";
+import { parseMarkdownTable as parseL2ScalingCosts } from "./l2beat/scaling_costs.js";
+import { parseMarkdownTable as parseL2ScalingActivity } from "./l2beat/scaling_activity.js";
+import { parseMarkdownTable as parseL2ScalingDA } from "./l2beat/scaling_da.js";
 
 import { parseTokens as parseUniswapTokens } from "./uniswap/tokens.js";
 import { parsePools as parseUniswapPools } from "./uniswap/pools.js";
 import { parseAuctions as parseUniswapAuctions } from "./uniswap/auctions.js";
+import { parsePoolDetail as parseUniswapPoolDetail } from "./uniswap/pool_detail.js";
+import { parseTokenDetail as parseUniswapTokenDetail } from "./uniswap/token_detail.js";
+
+import { parseGlobalDominance as parseCgGlobalDominance } from "./coingecko/global_dominance.js";
+import { parseTokenDetail as parseCgTokenDetail } from "./coingecko/token_detail.js";
+
+import { parseGasTracker as parseEthGasTracker } from "./etherscan/gas_tracker.js";
+
+import { parseMarkets as parseAaveMarkets } from "./aave/markets.js";
+import { parseReserveDetail as parseAaveReserveDetail } from "./aave/reserve_detail.js";
+
+import { parseStablecoins as parseDlStablecoins } from "./defillama/stablecoins.js";
+import { parseChainOverview as parseDlChainOverview } from "./defillama/chain_overview.js";
+
+import { parseFeeds as parseChainlinkFeeds } from "./chainlink/feeds.js";
+import { parseFeedDetail as parseChainlinkFeedDetail } from "./chainlink/feed_detail.js";
+
+import { parseNameDetail as parseEnsNameDetail } from "./ens/name_detail.js";
+import { parseNameCheck as parseEnsSearch } from "./ens/search.js";
+import { parseReverseLookup as parseEnsReverse } from "./ens/reverse_lookup.js";
+
+import { parseBlocks as parseFlareBlocks } from "./flare/blocks.js";
+import { parseTransactions as parseFlareTransactions } from "./flare/transactions.js";
+import { parseTokens as parseFlareTokens } from "./flare/tokens.js";
+import { parseAddressDetail as parseFlareAddressDetail } from "./flare/address_detail.js";
+
+import { parseBlocks as parseHederaBlocks } from "./hedera/blocks.js";
+import { parseTransactions as parseHederaTransactions } from "./hedera/transactions.js";
+import { parseTokens as parseHederaTokens } from "./hedera/tokens.js";
+import { parseAccountDetail as parseHederaAccountDetail } from "./hedera/account_detail.js";
+
+import { parseProjectDetail as parseRdProjectDetail } from "./rootdata/project_detail.js";
 
 interface Recipe {
   url: string | ((params?: Record<string, string>) => string);
@@ -252,6 +287,18 @@ const recipes: Record<string, Recipe> = {
     url: "https://l2beat.com/scaling/risk",
     parse: parseL2ScalingRisk,
   },
+  "l2beat/scaling_costs": {
+    url: "https://l2beat.com/scaling/costs",
+    parse: parseL2ScalingCosts,
+  },
+  "l2beat/scaling_activity": {
+    url: "https://l2beat.com/scaling/activity",
+    parse: parseL2ScalingActivity,
+  },
+  "l2beat/scaling_da": {
+    url: "https://l2beat.com/scaling/data-availability",
+    parse: parseL2ScalingDA,
+  },
   "uniswap/tokens": {
     url: (params) =>
       `https://app.uniswap.org/explore/tokens/${params?.chain ?? "ethereum"}?lng=en`,
@@ -269,6 +316,123 @@ const recipes: Record<string, Recipe> = {
       `https://app.uniswap.org/explore/auctions/${params?.chain ?? "ethereum"}?lng=en`,
     parse: parseUniswapAuctions,
     checkIdle: true,
+  },
+  "uniswap/pool_detail": {
+    url: (params) =>
+      `https://app.uniswap.org/explore/pools/${params?.chain ?? "ethereum"}/${params?.address ?? ""}?lng=en`,
+    parse: parseUniswapPoolDetail,
+    checkIdle: true,
+  },
+  "uniswap/token_detail": {
+    url: (params) =>
+      `https://app.uniswap.org/explore/tokens/${params?.chain ?? "ethereum"}/${params?.token ?? ""}?lng=en`,
+    parse: parseUniswapTokenDetail,
+    checkIdle: true,
+  },
+  "coingecko/global_dominance": {
+    url: "https://www.coingecko.com/en/global-charts",
+    parse: parseCgGlobalDominance,
+  },
+  "coingecko/token_detail": {
+    url: (params) => `https://www.coingecko.com/en/coins/${params?.coin ?? "bitcoin"}`,
+    parse: parseCgTokenDetail,
+  },
+  "etherscan/gas_tracker": {
+    url: "https://etherscan.io/gastracker",
+    parse: parseEthGasTracker,
+  },
+  "aave/markets": {
+    url: (params) => {
+      const qs = params?.market ? `?marketName=${params.market}` : "";
+      return `https://app.aave.com/markets/${qs}`;
+    },
+    parse: parseAaveMarkets,
+    checkIdle: true,
+  },
+  "aave/reserve_detail": {
+    url: (params) =>
+      `https://app.aave.com/reserve-overview/?underlyingAsset=${params?.asset ?? ""}&marketName=${params?.market ?? "proto_aave_v3"}`,
+    parse: parseAaveReserveDetail,
+    checkIdle: true,
+  },
+  "defillama/stablecoins": {
+    url: "https://defillama.com/stablecoins",
+    parse: parseDlStablecoins,
+    checkIdle: true,
+  },
+  "defillama/chain_overview": {
+    url: (params) => `https://defillama.com/chain/${params?.chain ?? "ethereum"}`,
+    parse: (md: string) => parseDlChainOverview(md, "ethereum"),
+    checkIdle: true,
+  },
+  "chainlink/feeds": {
+    url: "https://data.chain.link/feeds",
+    parse: parseChainlinkFeeds,
+    checkIdle: true,
+  },
+  "chainlink/feed_detail": {
+    url: (params) => params?.url ?? "https://data.chain.link/feeds/ethereum/mainnet/btc-usd",
+    parse: (md: string) => parseChainlinkFeedDetail(md, ""),
+    checkIdle: true,
+  },
+  "ens/name_detail": {
+    url: (params) => `https://app.ens.domains/${params?.name ?? "vitalik.eth"}`,
+    parse: (md: string) => parseEnsNameDetail(md, "", ""),
+    checkIdle: true,
+  },
+  "ens/search": {
+    url: (params) => `https://app.ens.domains/?search=${encodeURIComponent(params?.query ?? "")}`,
+    parse: (md: string) => parseEnsSearch(md, "", ""),
+    checkIdle: true,
+  },
+  "ens/reverse_lookup": {
+    url: (params) => `https://app.ens.domains/${params?.address ?? ""}`,
+    parse: (md: string) => parseEnsReverse(md, ""),
+    checkIdle: true,
+  },
+  "flare/blocks": {
+    url: "https://flare-explorer.flare.network/blocks",
+    parse: parseFlareBlocks,
+    checkIdle: true,
+  },
+  "flare/transactions": {
+    url: "https://flare-explorer.flare.network/txs",
+    parse: parseFlareTransactions,
+    checkIdle: true,
+  },
+  "flare/tokens": {
+    url: "https://flare-explorer.flare.network/tokens",
+    parse: parseFlareTokens,
+    checkIdle: true,
+  },
+  "flare/address_detail": {
+    url: (params) => `https://flare-explorer.flare.network/address/${params?.address ?? ""}`,
+    parse: (md: string) => parseFlareAddressDetail(md, "", ""),
+    checkIdle: true,
+  },
+  "hedera/blocks": {
+    url: "https://hashscan.io/mainnet/blocks",
+    parse: parseHederaBlocks,
+    checkIdle: true,
+  },
+  "hedera/transactions": {
+    url: "https://hashscan.io/mainnet/transactions",
+    parse: parseHederaTransactions,
+    checkIdle: true,
+  },
+  "hedera/tokens": {
+    url: "https://hashscan.io/mainnet/tokens",
+    parse: parseHederaTokens,
+    checkIdle: true,
+  },
+  "hedera/account_detail": {
+    url: (params) => `https://hashscan.io/mainnet/account/${params?.account ?? ""}`,
+    parse: (md: string) => parseHederaAccountDetail(md, "", ""),
+    checkIdle: true,
+  },
+  "rootdata/project_detail": {
+    url: (params) => `https://www.rootdata.com/Projects/detail/${encodeURIComponent(params?.slug ?? "")}`,
+    parse: parseRdProjectDetail,
   },
   "x/profile": {
     url: (params) => `https://x.com/${params?.username ?? "VitalikButerin"}`,
